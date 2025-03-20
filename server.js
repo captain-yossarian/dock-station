@@ -1,37 +1,44 @@
-import express from "express";
-import find from "local-devices";
 // Without using a transpiler
 import net from "net";
+import { WebSocketServer } from "ws";
 
-// server
-const server = net
-  .createServer(function (socket) {
-    console.log("connected");
+const wss = new WebSocketServer({ port: 12346 });
 
-    socket.on("data", function (data) {
-      console.log(data.toString());
+net.createServer((socket) => {
+  // Handle data from the TCP client
+  socket.on("data", (data) => {
+    socket.write("Hello from TCP server");
+    wss.clients.forEach((ws) => {
+      if (ws.readyState === ws.OPEN) {
+        ws.send(data.toString()); // Send data to WebSocket client
+      }
     });
-  })
+  });
 
-  .listen(12345);
+  // Handle errors
+  socket.on("error", (err) => {
+    console.error("TCP Client error:", err);
+  });
 
-// Find all local network devices.
-const getDevices = () => find();
-
-const app = express();
-const port = 3002;
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  // Handle TCP client disconnecting
+  socket.on("end", () => {
+    console.log("TCP Client disconnected");
+  });
 });
 
-app.get("/init", (req, res) => {
-  const { query } = req;
-  const { ip = "", comment = "" } = query;
-  console.log({ ip, comment });
-  io.emit("init_esp", {
-    ip,
-    comment,
+// Handle WebSocket connections from React
+wss.on("connection", (ws) => {
+  ws.on("message", (message) => {
+    console.log("Received message from WebSocket:", message);
   });
-  res.send(`${ip},${comment}`);
+
+  // Handle WebSocket disconnection
+  ws.on("close", () => {
+    console.log("WebSocket Client disconnected");
+  });
+
+  // Handle WebSocket errors
+  ws.on("error", (err) => {
+    console.error("WebSocket error:", err);
+  });
 });

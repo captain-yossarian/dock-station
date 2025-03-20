@@ -21,6 +21,7 @@
   "dependencies": {
     "express": "^4.21.2",
     "local-devices": "^4.0.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "ws": "^8.18.1"
   }
 }
