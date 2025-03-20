@@ -1,0 +1,26 @@
+{
+  "name": "dock-station",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/captain-yossarian/dock-station.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/captain-yossarian/dock-station/issues"
+  },
+  "homepage": "https://github.com/captain-yossarian/dock-station#readme",
+  "dependencies": {
+    "express": "^4.21.2",
+    "local-devices": "^4.0.0",
+    "socket.io": "^4.8.1"
+  }
+}
